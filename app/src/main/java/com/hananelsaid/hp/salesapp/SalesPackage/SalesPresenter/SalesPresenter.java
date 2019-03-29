@@ -20,8 +20,8 @@ public class SalesPresenter implements Contract.IPresenterModel, Contract.IPrese
     }
 
     @Override
-    public void catchdata(String productName, double sellingPrice, double buyingPrice,long time) {
-        item= new Item(productName,sellingPrice,buyingPrice,time);
+    public void catchdata(String productName, double sellingPrice, double buyingPrice,String day ,String month) {
+        item= new Item(productName,sellingPrice,buyingPrice,day,month);
         model.addItem(item);
         Log.i("catchdata", "catchdata: ");
 

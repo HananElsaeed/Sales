@@ -1,7 +1,6 @@
 package com.hananelsaid.hp.salesapp.SalesPackage.SalesModel.DatabasePackage;
 
 import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
@@ -16,26 +15,37 @@ public class Item {
     private double itemSellingPrice;
     @ColumnInfo(name = "item_BuyingPrice")
     private double itemBuyingPrice;
-    @ColumnInfo(name = "item_time")
-    private long itemTime;
+    @ColumnInfo(name = "item_day")
+    private String itemDay;
+    @ColumnInfo(name = "item_month")
+    private String itemMonth;
 
     public Item() {
     }
 
-    public long getItemTime() {
-        return itemTime;
+    public String getItemDay() {
+        return itemDay;
     }
 
-    public void setItemTime(long itemTime) {
-        this.itemTime = itemTime;
+    public void setItemDay(String itemDay) {
+        this.itemDay = itemDay;
     }
 
+    public String getItemMonth() {
+        return itemMonth;
+    }
 
-    public Item(String itemName, double itemSellingPrice, double itemBuyingPrice, long itemTime) {
+    public void setItemMonth(String itemMonth) {
+        this.itemMonth = itemMonth;
+    }
+
+    public Item(String itemName, double itemSellingPrice, double itemBuyingPrice, String itemDay, String itemMonth) {
         this.itemName = itemName;
         this.itemSellingPrice = itemSellingPrice;
         this.itemBuyingPrice = itemBuyingPrice;
-        this.itemTime = itemTime;
+        this.itemDay = itemDay;
+        this.itemMonth = itemMonth;
+
     }
 
     public int getId() {

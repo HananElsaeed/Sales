@@ -1,5 +1,6 @@
 package com.hananelsaid.hp.salesapp.SalesPackage.SalesView;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -8,10 +9,17 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.hananelsaid.hp.salesapp.HomePackage.View.MainActivity;
 import com.hananelsaid.hp.salesapp.R;
 import com.hananelsaid.hp.salesapp.SalesPackage.SalesModel.Contract;
 import com.hananelsaid.hp.salesapp.SalesPackage.SalesModel.DatabasePackage.MySingleton;
 import com.hananelsaid.hp.salesapp.SalesPackage.SalesPresenter.SalesPresenter;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 public class Sales_Activity extends AppCompatActivity implements Contract.IView {
     private SalesPresenter mPresenter;
@@ -49,14 +57,54 @@ public class Sales_Activity extends AppCompatActivity implements Contract.IView 
                         && !TextUtils.isEmpty(buyingPriceStr)) {
                     sellingPrice = Double.parseDouble(sellingPriceStr);
                     buyingPrice = Double.parseDouble(buyingPriceStr);
-                    long time = System.currentTimeMillis();
-                    mPresenterView.catchdata(productName, sellingPrice, buyingPrice, time);
+                   String day = getTheDay();
+                   String month = getTheMonth();
+                    mPresenterView.catchdata(productName, sellingPrice, buyingPrice, day,month);
+                    Toast.makeText(Sales_Activity.this, "تم الاضافه",
+                            Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(Sales_Activity.this, MainActivity.class);
+                    startActivity(intent);
                 } else
-                    Toast.makeText(Sales_Activity.this, "من فضلك ادخل جميع بيانات المنتج", Toast.LENGTH_SHORT).show();
-
+                    Toast.makeText(Sales_Activity.this, "من فضلك ادخل جميع بيانات المنتج",
+                            Toast.LENGTH_SHORT).show();
             }
         });
     }
 
+    public String getdate() {
+        Calendar cal = Calendar.getInstance();
+        Date currentDate = cal.getTime();
+        DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+        String formattedDateString = formatter.format(currentDate);
+        return formattedDateString;
+    }
+
+    public String getTheDay() {
+        String input_date = getdate();
+        SimpleDateFormat format1 = new SimpleDateFormat("dd/MM/yyyy");
+        Date dt1 = null;
+        try {
+            dt1 = format1.parse(input_date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        SimpleDateFormat format2 = new SimpleDateFormat("dd");
+        String finalDay = format2.format(dt1);
+        return finalDay;
+    }
+
+    public String getTheMonth() {
+        String input_date = getdate();
+        SimpleDateFormat format1 = new SimpleDateFormat("dd/MM/yyyy");
+        Date dt1 = null;
+        try {
+            dt1 = format1.parse(input_date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        SimpleDateFormat format2 = new SimpleDateFormat("MM");
+        String finalMonth = format2.format(dt1);
+        return finalMonth;
+    }
 
 }

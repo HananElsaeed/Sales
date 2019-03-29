@@ -1,9 +1,19 @@
 <resources>
-    <string name="app_name">Sales App</string>
+    <string name="app_name">المبيعات</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Android Studio</string>
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
+    <string-array name="products">
+        <item>حكاية السندباد</item>
+        <item>الجزيرة المتحركه والخيول البحريه</item>
+        <item> وادى الألماس</item>
+        <item>الغول الأسود</item>
+        <item>السندباء يدفن حى</item>
+        <item>شيخ البحر</item>
+        <item> رحله نهرية فى كهف</item>
+        <item>مقبرة الافيال</item>
+    </string-array>
 </resources>

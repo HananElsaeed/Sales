@@ -12,16 +12,19 @@ public interface Contract {
     }
 
     public interface IPresenterView {
-       void catchdata(String productName,double sellingPrice,double buyingPrice,long time);
+        void catchdata(String productName, double sellingPrice, double buyingPrice, String day ,String month);
     }
 
     public interface IModel {
         void addItem(Item item);
+
         void deleteItem(Item item);
-        List<Item> getItems();
+
+      void getItems();
     }
 
     public interface IPresenterModel {
+
     }
 
 

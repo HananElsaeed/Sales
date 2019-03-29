@@ -1,11 +1,15 @@
 package com.hananelsaid.hp.salesapp.HomePackage.View;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -15,7 +19,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-
 import com.hananelsaid.hp.salesapp.HomePackage.Model.HomeMVPInterface;
 import com.hananelsaid.hp.salesapp.HomePackage.Presenter.HomePresenter;
 import com.hananelsaid.hp.salesapp.HomePackage.Presenter.ProductAdapter;
@@ -32,6 +35,7 @@ public class MainActivity extends AppCompatActivity
     private RecyclerView recyclerView;
     HomePresenter homePresenter;
     HomeMVPInterface.HomePresenetView mpresenter;
+    private ProductAdapter productAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,16 +72,36 @@ public class MainActivity extends AppCompatActivity
         recyclerView = findViewById(R.id.rv);
         mpresenter.getItemsList();
 
+        //delet item by swipping
+        ItemTouchHelper helper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder viewHolder1) {
+                return false;
+            }
 
+            @Override
+            public void onSwiped(@NonNull final RecyclerView.ViewHolder viewHolder, int i) {
+                final int position = viewHolder.getAdapterPosition();
+                new AlertDialog.Builder(MainActivity.this)
+                        .setMessage("هل تريد مسح المنتج بالفعل" )
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                mpresenter.deletItem(position);
+                                productAdapter.notifyDataSetChanged();
+                            }
+                        })
+                        .show();
+
+            }
+        });
+        helper.attachToRecyclerView(recyclerView);
     }
 
     @Override
     public void setRecycler(List<Item> items) {
-        ProductAdapter productAdapter = new ProductAdapter(items, this);
+        productAdapter = new ProductAdapter(items, this);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(productAdapter);
-
-
     }
 
     @Override
@@ -117,16 +141,33 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
         if (id == R.id.nav_productsale) {
             Intent intent = new Intent(MainActivity.this, Sales_Activity.class);
             startActivity(intent);
         } else if (id == R.id.nav_dailyearnings) {
+            double profit = mpresenter.getdailyProfit();
+            new AlertDialog.Builder(MainActivity.this)
+                    .setTitle("ربح اليوم")
+                    .setMessage("ربح اليوم =" + profit)
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
 
         } else if (id == R.id.nav_monthearnings) {
-
+            new AlertDialog.Builder(MainActivity.this)
+                    .setTitle("ربح الشهر")
+                    .setMessage("ربح الشهر=" + mpresenter.getMonthlyProfit())
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
         }
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;

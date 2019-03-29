@@ -1,7 +1,5 @@
 package com.hananelsaid.hp.salesapp.SalesPackage.SalesModel;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.persistence.room.Room;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -37,38 +35,35 @@ public class SalesModel implements Contract.IModel {
     @Override
     public void addItem(Item item) {
         new DataBaseOperation(item, INSERT_OPERATION).execute();
-
     }
 
     @Override
     public void deleteItem(Item item) {
-
+        new DataBaseOperation(item, DELETE_OPERATION).execute();
     }
 
     @Override
-    public List<Item> getItems() {
-        new DataBaseOperation( QUERY_OPERATION).execute();
-        return null;
+    public void getItems() {
+        new DataBaseOperation(QUERY_OPERATION).execute();
     }
 
     private void initDB() {
         Log.e(TAG, "_DataBaseInit");
         itemDB = MySingleton.getInstance().getDB();
-
     }
 
     // Async
     class DataBaseOperation extends AsyncTask<Void, Void, Void> {
-
         public Item item;
         public int operation;
 
-        public DataBaseOperation( int operation) {
-            this.operation = operation;
-        }
 
         public DataBaseOperation(Item item, int operation) {
             this.item = item;
+            this.operation = operation;
+        }
+
+        public DataBaseOperation(int operation) {
             this.operation = operation;
         }
 
@@ -79,11 +74,9 @@ public class SalesModel implements Contract.IModel {
             if (operation == INSERT_OPERATION) itemDB.itemDao().insert(item);
             else if (operation == DELETE_OPERATION) itemDB.itemDao().delete(item);
             else if (operation == UPDATE_OPERATION) itemDB.itemDao().updateUser(item);
-           else if (operation == QUERY_OPERATION) itemDB.itemDao().getItems();
-
+            else if (operation == QUERY_OPERATION) { mHomePresenter.onItemsLoaded(itemDB.itemDao().getItems());
+            }
             return null;
         }
-
     }
-
 }
