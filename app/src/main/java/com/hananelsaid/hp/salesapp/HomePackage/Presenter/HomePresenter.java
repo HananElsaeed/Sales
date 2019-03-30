@@ -32,9 +32,10 @@ public class HomePresenter implements HomeMVPInterface.HomePresenetView, HomeMVP
 
     @Override
     public void onItemsLoaded(List<Item> items) {
+        if (items.size()>0){
         mView.setRecycler(items);
         item = items.get(position);
-        this.items = items;
+        this.items = items;}
     }
 
     @Override
@@ -43,7 +44,7 @@ public class HomePresenter implements HomeMVPInterface.HomePresenetView, HomeMVP
     }
 
     public void deletItem(int position) {
-        if (position >= 0) {
+        if (position >= 0 && item!=null) {
             mModel.deleteItem(item);
             items.remove(position);
         }

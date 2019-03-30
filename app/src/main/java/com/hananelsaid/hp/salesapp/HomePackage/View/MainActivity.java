@@ -10,6 +10,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -19,6 +20,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.hananelsaid.hp.salesapp.DetailsPackage.Details_Activity;
 import com.hananelsaid.hp.salesapp.HomePackage.Model.HomeMVPInterface;
 import com.hananelsaid.hp.salesapp.HomePackage.Presenter.HomePresenter;
 import com.hananelsaid.hp.salesapp.HomePackage.Presenter.ProductAdapter;
@@ -28,6 +31,8 @@ import com.hananelsaid.hp.salesapp.SalesPackage.SalesModel.DatabasePackage.MySin
 import com.hananelsaid.hp.salesapp.SalesPackage.SalesView.Sales_Activity;
 
 import java.util.List;
+
+import static android.support.constraint.Constraints.TAG;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, HomeMVPInterface.HomeView {
@@ -50,14 +55,7 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -99,7 +97,19 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void setRecycler(List<Item> items) {
-        productAdapter = new ProductAdapter(items, this);
+        productAdapter = new ProductAdapter(items, this, new ProductAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(Item item) {
+                Intent intent = new Intent(MainActivity.this, Details_Activity.class);
+                intent.putExtra("name", item.getItemName());
+                Log.i(TAG, "onClick: " + item.getItemName());
+                intent.putExtra("ItemSellingPrice", item.getItemSellingPrice());
+                intent.putExtra("BuyingPrice", item.getItemBuyingPrice());
+                intent.putExtra("day", item.getItemDay());
+                intent.putExtra("month", item.getItemMonth());
+                startActivity(intent);
+            }
+        });
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(productAdapter);
     }
@@ -128,10 +138,7 @@ public class MainActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+
 
         return super.onOptionsItemSelected(item);
     }
