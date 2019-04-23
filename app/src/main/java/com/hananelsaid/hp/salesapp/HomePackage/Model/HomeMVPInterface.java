@@ -13,6 +13,7 @@ public interface HomeMVPInterface {
         void deletItem(int position);
         double getdailyProfit();
         double getMonthlyProfit();
+        void updateDB();
     }
 
     interface HomePresenterModel {

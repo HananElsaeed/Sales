@@ -22,6 +22,7 @@ public class SalesModel implements Contract.IModel {
     private static final int UPDATE_OPERATION = 2;
     private static final int QUERY_OPERATION = 7;
 
+
     public SalesModel(HomeMVPInterface.HomePresenterModel mHomePresenter) {
         this.mHomePresenter = mHomePresenter;
         initDB();
@@ -45,6 +46,11 @@ public class SalesModel implements Contract.IModel {
     @Override
     public void getItems() {
         new DataBaseOperation(QUERY_OPERATION).execute();
+    }
+
+    @Override
+    public void update(Item item) {
+        new DataBaseOperation(UPDATE_OPERATION).execute();
     }
 
     private void initDB() {
@@ -74,7 +80,8 @@ public class SalesModel implements Contract.IModel {
             if (operation == INSERT_OPERATION) itemDB.itemDao().insert(item);
             else if (operation == DELETE_OPERATION) itemDB.itemDao().delete(item);
             else if (operation == UPDATE_OPERATION) itemDB.itemDao().updateUser(item);
-            else if (operation == QUERY_OPERATION) { mHomePresenter.onItemsLoaded(itemDB.itemDao().getItems());
+            else if (operation == QUERY_OPERATION) {
+                mHomePresenter.onItemsLoaded(itemDB.itemDao().getItems());
             }
             return null;
         }

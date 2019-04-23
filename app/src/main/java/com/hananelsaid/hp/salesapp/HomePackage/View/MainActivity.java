@@ -1,5 +1,6 @@
 package com.hananelsaid.hp.salesapp.HomePackage.View;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -7,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.NavUtils;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -41,11 +43,14 @@ public class MainActivity extends AppCompatActivity
     HomePresenter homePresenter;
     HomeMVPInterface.HomePresenetView mpresenter;
     private ProductAdapter productAdapter;
+    public static Activity fa;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setTitle("المبيعات");
+        fa=this;
         //singleton inti
         MySingleton.initializeDB(getApplicationContext());
         //init the presenter
@@ -54,7 +59,6 @@ public class MainActivity extends AppCompatActivity
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -71,9 +75,11 @@ public class MainActivity extends AppCompatActivity
         mpresenter.getItemsList();
 
         //delet item by swipping
-        ItemTouchHelper helper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+        ItemTouchHelper helper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT)
+        {
             @Override
-            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder viewHolder1) {
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView
+                    .ViewHolder viewHolder1) {
                 return false;
             }
 
@@ -81,7 +87,7 @@ public class MainActivity extends AppCompatActivity
             public void onSwiped(@NonNull final RecyclerView.ViewHolder viewHolder, int i) {
                 final int position = viewHolder.getAdapterPosition();
                 new AlertDialog.Builder(MainActivity.this)
-                        .setMessage("هل تريد مسح المنتج بالفعل" )
+                        .setMessage("هل تريد مسح المنتج بالفعل")
                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 mpresenter.deletItem(position);
@@ -94,6 +100,18 @@ public class MainActivity extends AppCompatActivity
         });
         helper.attachToRecyclerView(recyclerView);
     }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+       // mpresenter.getItemsList();
+      //  mpresenter.updateDB();
+        //if (productAdapter!= null)
+          //  productAdapter.notifyDataSetChanged();
+    }
+
+
 
     @Override
     public void setRecycler(List<Item> items) {
@@ -116,11 +134,14 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
+
         } else {
             super.onBackPressed();
+
         }
     }
 
@@ -137,7 +158,6 @@ public class MainActivity extends AppCompatActivity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
 
 
         return super.onOptionsItemSelected(item);

@@ -35,6 +35,7 @@ public class Sales_Activity extends AppCompatActivity implements Contract.IView 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sales_);
+        MainActivity.fa.finish();
         //singleton inti
         MySingleton.initializeDB(getApplicationContext());
         //presenter instance initialization
@@ -57,13 +58,15 @@ public class Sales_Activity extends AppCompatActivity implements Contract.IView 
                         && !TextUtils.isEmpty(buyingPriceStr)) {
                     sellingPrice = Double.parseDouble(sellingPriceStr);
                     buyingPrice = Double.parseDouble(buyingPriceStr);
-                   String day = getTheDay();
-                   String month = getTheMonth();
-                    mPresenterView.catchdata(productName, sellingPrice, buyingPrice, day,month);
+                    String day = getTheDay();
+                    String month = getTheMonth();
+                    mPresenterView.catchdata(productName, sellingPrice, buyingPrice, day, month);
                     Toast.makeText(Sales_Activity.this, "تم الاضافه",
                             Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(Sales_Activity.this, MainActivity.class);
+                    Intent intent = new Intent(Sales_Activity.this,MainActivity.class);
                     startActivity(intent);
+                    Sales_Activity.this.finish();
+
                 } else
                     Toast.makeText(Sales_Activity.this, "من فضلك ادخل جميع بيانات المنتج",
                             Toast.LENGTH_SHORT).show();
@@ -91,6 +94,12 @@ public class Sales_Activity extends AppCompatActivity implements Contract.IView 
         SimpleDateFormat format2 = new SimpleDateFormat("dd");
         String finalDay = format2.format(dt1);
         return finalDay;
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        this.finish();
     }
 
     public String getTheMonth() {

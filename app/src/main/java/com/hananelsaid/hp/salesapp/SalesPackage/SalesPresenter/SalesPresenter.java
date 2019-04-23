@@ -14,15 +14,16 @@ public class SalesPresenter implements Contract.IPresenterModel, Contract.IPrese
     Item item;
 
     public SalesPresenter(Contract.IView view) {
-        this.view=view;
-        this.model= new SalesModel(this);
+        this.view = view;
+        this.model = new SalesModel(this);
 
     }
 
     @Override
-    public void catchdata(String productName, double sellingPrice, double buyingPrice,String day ,String month) {
-        item= new Item(productName,sellingPrice,buyingPrice,day,month);
+    public void catchdata(String productName, double sellingPrice, double buyingPrice, String day, String month) {
+        item = new Item(productName, sellingPrice, buyingPrice, day, month);
         model.addItem(item);
+      //  model.update(item);
         Log.i("catchdata", "catchdata: ");
 
 

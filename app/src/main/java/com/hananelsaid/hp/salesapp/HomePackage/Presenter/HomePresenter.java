@@ -23,6 +23,7 @@ public class HomePresenter implements HomeMVPInterface.HomePresenetView, HomeMVP
     Contract.IModel mModel;
     private int position;
     private Item item;
+    private Item lastItem;
     List<Item> items;
 
     public HomePresenter(HomeMVPInterface.HomeView mView) {
@@ -32,10 +33,12 @@ public class HomePresenter implements HomeMVPInterface.HomePresenetView, HomeMVP
 
     @Override
     public void onItemsLoaded(List<Item> items) {
-        if (items.size()>0){
-        mView.setRecycler(items);
-        item = items.get(position);
-        this.items = items;}
+        if (items.size() > 0) {
+            mView.setRecycler(items);
+            item = items.get(position);
+            lastItem = items.get(items.size()-1);
+            this.items = items;
+        }
     }
 
     @Override
@@ -44,9 +47,16 @@ public class HomePresenter implements HomeMVPInterface.HomePresenetView, HomeMVP
     }
 
     public void deletItem(int position) {
-        if (position >= 0 && item!=null) {
+        if (position >= 0 && item != null) {
             mModel.deleteItem(item);
             items.remove(position);
+        }
+    }
+
+    @Override
+    public void updateDB() {
+        if (item != null) {
+            mModel.update(lastItem);
         }
     }
 
@@ -60,12 +70,13 @@ public class HomePresenter implements HomeMVPInterface.HomePresenetView, HomeMVP
             double profit = itemSellingPrice - itemBuyingPrice;
             String day = item.getItemDay();
             String currentDay = getTheDay();
-           if (day.equals(currentDay)) {
+            if (day.equals(currentDay)) {
                 totalProfit = totalProfit + profit;
             }
         }
         return totalProfit;
     }
+
     @Override
     public double getMonthlyProfit() {
         double totalMonthProfit = 0;
@@ -75,12 +86,12 @@ public class HomePresenter implements HomeMVPInterface.HomePresenetView, HomeMVP
             double itemBuyingPrice = item.getItemBuyingPrice();
             double profit = itemSellingPrice - itemBuyingPrice;
             String month = item.getItemMonth();
-            Log.i(TAG, "getMonthlyProfit: "+month);
+            Log.i(TAG, "getMonthlyProfit: " + month);
             String currentMonth = getTheMonth();
-            Log.i(TAG, "getMonthlyProfit: "+currentMonth);
-            if (month.equals( currentMonth)) {
-                totalMonthProfit +=profit;
-                Log.i(TAG, "getMonthlyProfit: "+profit);
+            Log.i(TAG, "getMonthlyProfit: " + currentMonth);
+            if (month.equals(currentMonth)) {
+                totalMonthProfit += profit;
+                Log.i(TAG, "getMonthlyProfit: " + profit);
             }
         }
         return totalMonthProfit;
@@ -107,6 +118,7 @@ public class HomePresenter implements HomeMVPInterface.HomePresenetView, HomeMVP
         String finalDay = format2.format(dt1);
         return finalDay;
     }
+
     public String getTheMonth() {
         String input_date = getdate();
         SimpleDateFormat format1 = new SimpleDateFormat("dd/MM/yyyy");

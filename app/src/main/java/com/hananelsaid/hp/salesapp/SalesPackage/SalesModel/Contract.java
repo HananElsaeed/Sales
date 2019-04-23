@@ -12,7 +12,7 @@ public interface Contract {
     }
 
     public interface IPresenterView {
-        void catchdata(String productName, double sellingPrice, double buyingPrice, String day ,String month);
+        void catchdata(String productName, double sellingPrice, double buyingPrice, String day, String month);
     }
 
     public interface IModel {
@@ -20,7 +20,9 @@ public interface Contract {
 
         void deleteItem(Item item);
 
-      void getItems();
+        void getItems();
+
+        void update(Item item);
     }
 
     public interface IPresenterModel {
